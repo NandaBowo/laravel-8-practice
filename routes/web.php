@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DashboardPostController;
 use App\Http\Controllers\PostController;
 use App\Models\Category;
 use App\Models\Post;
@@ -21,15 +21,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('home', [
-        'title' => 'Home',
-        'active' => 'home'
+        'title' => 'Home'
     ]);
 });
 
 Route::get('/about', function () {
     return view('about', [
         'title' => 'About',
-        'active' => 'about',
         "name" => "Nanda Dwi Cahyo Wibowo",
         'email' => 'nandad.cahyo@gmail.com',
         'image' => 'img/student.png'
@@ -43,7 +41,6 @@ Route::get('/categories', function ()
 {
     return view('categories', [
         'title' => 'Post Categories',
-        'active' => 'categories',
         'categories' => Category::all()
     ]);
 });
@@ -57,4 +54,9 @@ Route::post('/register', [AuthController::class, 'postRegister']);
 Route::get('/logout', [AuthController::class, 'getLogout'])->middleware('auth');
 Route::post('/logout', [AuthController::class, 'logout']);
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth');
+Route::get('/dashboard', function ()
+{
+    return view('dashboard.index');
+})->middleware('auth');
+
+Route::resource('/dashboard/posts', DashboardPostController::class)->middleware('auth');
